@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Word Count</title>
+</head>
+<body>
+  <input type="file" id="file-input">
+  <br>
+  <label for="word-input">Enter a word to search:</label>
+  <input type="text" id="word-input">
+  <br>
+  <button onclick="countWord()">Count</button>
+  <br>
+  <p id="result"></p>
+
+  <script>
+    function countWord() {
+      const fileInput = document.getElementById('file-input');
+      const wordInput = document.getElementById('word-input');
+      const result = document.getElementById('result');
+
+      // Check if a file is selected
+      if (!fileInput.files[0]) {
+        result.innerHTML = 'Please select a file.';
+        return;
+      }
+
+      const fileReader = new FileReader();
+
+      // Read the file
+      fileReader.readAsText(fileInput.files[0]);
+
+      fileReader.onload = function() {
+        const fileContent = fileReader.result;
+        const word = wordInput.value;
+
+        // Initialize counter
+        let count = 0;
+
+        // Loop through each character in the file
+        for (let i = 0; i < fileContent.length; i++) {
+          // Check if the character matches the start of the word
+          if (fileContent[i] === word[0]) {
+            // Check if the rest of the word matches
+            let match = true;
+            for (let j = 1; j < word.length; j++) {
+              if (fileContent[i + j] !== word[j]) {
+                match = false;
+                break;
+              }
+            }
+            if (match) {
+              count++;
+            }
+          }
+        }
+
+        // Display the result
+        result.innerHTML = `The word "${word}" appears ${count} times in the file.`;
+      };
+    }
+  </script>
+</body>
+</html>
